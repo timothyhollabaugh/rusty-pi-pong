@@ -1,0 +1,14 @@
+[package]
+name = "pong"
+version = "0.1.0"
+authors = ["tim"]
+
+[lib]
+crate-type = ["staticlib"]
+path = "src/kernel.rs"
+
+[profile.release]
+panic = "abort"
+
+[dependencies]
+rusty_metal_raspberry_pi = { path = "../rusty-metal-raspberry-pi" }
