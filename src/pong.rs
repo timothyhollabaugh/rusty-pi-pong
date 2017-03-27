@@ -76,8 +76,8 @@ impl Pong {
             //}
         }
 
-        self.ball_x = (self.ball_x as i32 - self.ball_velocity_x) as u32;
-        self.ball_y = (self.ball_y as i32 - self.ball_velocity_y) as u32;
+        self.ball_x = (self.ball_x as i32 + self.ball_velocity_x) as u32;
+        self.ball_y = (self.ball_y as i32 + self.ball_velocity_y) as u32;
 
     }
 

@@ -6,14 +6,14 @@ use rusty_metal_raspberry_pi::gpio;
 use rusty_metal_raspberry_pi::base;
 use rusty_metal_raspberry_pi::systimer;
 
-const WIDTH: usize = 7;
-const HEIGHT: usize = 5;
+pub const WIDTH: usize = 7;
+pub const HEIGHT: usize = 5;
 
 const COL_PINS: [u32; WIDTH] = [23, 24, 25, 8, 7, 1, 12];
 const ROW_PINS: [u32; HEIGHT] = [19, 26, 16, 20, 21];
 
 pub struct Matrix {
-    matrix: [[bool; HEIGHT]; WIDTH + 1],
+    matrix: [[bool; HEIGHT + 1]; WIDTH + 1],
     last_update: u32,
     last_x: usize,
     delay: u32,
@@ -22,7 +22,7 @@ pub struct Matrix {
 impl Matrix {
     pub fn new(delay: u32) -> Matrix {
         Matrix {
-            matrix: [[false; HEIGHT]; WIDTH + 1],
+            matrix: [[false; HEIGHT + 1]; WIDTH + 1],
             last_update: 0,
             last_x: 6,
             delay: delay,
@@ -33,13 +33,13 @@ impl Matrix {
         for i in 0..WIDTH {
             gpio::set_mode(COL_PINS[i], gpio::Modes::Out);
             gpio::digital_write(COL_PINS[i], true);
-            systimer::delay_micros(100000);
+            //systimer::delay_micros(100000);
         }
 
         for i in 0..HEIGHT {
             gpio::set_mode(ROW_PINS[i], gpio::Modes::Out);
             gpio::digital_write(ROW_PINS[i], true);
-            systimer::delay_micros(100000);
+            systimer::delay_micros(50000);
         }
 
 
