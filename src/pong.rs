@@ -10,8 +10,15 @@ pub struct Pong {
     ball_x: u32,
     ball_y: u32,
 
-    ball_velocity_x: i32,
-    ball_velocity_y: i32,
+    /// The number of left or right leds required before moving up or down
+    ball_counts: u32,
+    ball_current_count: u32,
+
+    /// The x direction the ball it going, true => (+), false => (-)
+    ball_direction_x: bool,
+
+    /// The y direction the ball it going, true => (+), false => (-)
+    ball_direction_y: bool,
 
     left_player: u32,
     right_player: u32,
@@ -26,8 +33,11 @@ impl Pong {
             ball_x: (matrix::WIDTH as u32)/2,
             ball_y: (matrix::HEIGHT as u32)/2,
 
-            ball_velocity_x: 0,
-            ball_velocity_y: 1,
+            ball_counts: 2,
+            ball_current_count: 0,
+
+            ball_direction_x: true,
+            ball_direction_y: false,
 
             left_player: (matrix::HEIGHT as u32)/2,
             right_player: (matrix::HEIGHT as u32)/2,
@@ -42,9 +52,21 @@ impl Pong {
 
             matrix.set(self.ball_x as usize, self.ball_y as usize, false);
 
+            for i in 0..PLAYER_HEIGHT {
+                matrix.set(0, (self.left_player + i) as usize, false);
+                matrix.set(matrix::WIDTH - 1, (self.right_player + i) as usize, false);
+            }
+
             self.update_ball();
+            self.update_left_player();
+            self.update_right_player();
 
             matrix.set(self.ball_x as usize, self.ball_y as usize, true);
+
+            for i in 0..PLAYER_HEIGHT {
+                matrix.set(0, (self.left_player + i) as usize, true);
+                matrix.set(matrix::WIDTH - 1, (self.right_player + i) as usize, true);
+            }
 
             self.last_update = now;
         }
@@ -53,31 +75,67 @@ impl Pong {
     fn update_ball(&mut self){
 
         if self.ball_y >= matrix::HEIGHT as u32 - 1 {
-            self.ball_velocity_y = -1 * self.ball_velocity_y.abs();
+            self.ball_direction_y = false;
         }
 
         if self.ball_y <= 0 {
-            self.ball_velocity_y = self.ball_velocity_y.abs();
+            self.ball_direction_y = true;
         }
 
         if self.ball_x <= 1 {
             //if self.ball_y >= self.left_player_y && self.ball_y < self.left_player_y + PLAYER_HEIGHT {
-            self.ball_velocity_x = self.ball_velocity_x.abs();
+            self.ball_direction_x = true;
             //}else{
             //    self.reset();
             //}
         }
 
-        if self.ball_x >= matrix::WIDTH as u32 - 1 {
+        if self.ball_x >= matrix::WIDTH as u32 - 2 {
             //if self.ball_y >= self.right_player_y && self.ball_y < self.right_player_y + PLAYER_HEIGHT {
-            self.ball_velocity_x = -self.ball_velocity_x.abs();
+            self.ball_direction_x = false;
             //}else{
             //    self.reset();
             //}
         }
 
-        self.ball_x = (self.ball_x as i32 + self.ball_velocity_x) as u32;
-        self.ball_y = (self.ball_y as i32 + self.ball_velocity_y) as u32;
+        match self.ball_direction_x {
+            true => self.ball_x += 1,
+            false => self.ball_x -= 1
+        };
+
+        if self.ball_current_count >= self.ball_counts {
+            match self.ball_direction_y {
+                true => self.ball_y += 1,
+                false => self.ball_y -= 1
+            };
+
+            self.ball_current_count = 1;
+        }else{
+            self.ball_current_count += 1;
+        }
+    }
+
+    fn update_left_player(&mut self) {
+
+        if self.ball_y > self.left_player + PLAYER_HEIGHT - 1 && self.left_player < matrix::HEIGHT as u32 - PLAYER_HEIGHT {
+            self.left_player += 1;
+        }
+
+        if self.ball_y < self.left_player && self.left_player > 1 {
+            self.left_player -= 1;
+        }
+
+    }
+
+    fn update_right_player(&mut self) {
+
+        if self.ball_y > self.right_player + PLAYER_HEIGHT - 1 && self.right_player < matrix::HEIGHT as u32 - PLAYER_HEIGHT {
+            self.right_player += 1;
+        }
+
+        if self.ball_y < self.right_player && self.right_player > 1 {
+            self.right_player -= 1;
+        }
 
     }
 
@@ -85,8 +143,11 @@ impl Pong {
         self.ball_x = (matrix::WIDTH as u32)/2 + 1;
         self.ball_y = (matrix::HEIGHT as u32)/2 + 1;
 
-        self.ball_velocity_x = 1;
-        self.ball_velocity_y = 1;
+        self.ball_counts = 2;
+        self.ball_current_count = 0;
+
+        self.ball_direction_x = true;
+        self.ball_direction_y =  false;
 
         self.left_player = (matrix::HEIGHT as u32)/2;
         self.right_player = (matrix::HEIGHT as u32)/2;
