@@ -117,24 +117,28 @@ impl Pong {
 
     fn update_left_player(&mut self) {
 
-        if self.ball_y > self.left_player + PLAYER_HEIGHT - 1 && self.left_player < matrix::HEIGHT as u32 - PLAYER_HEIGHT {
-            self.left_player += 1;
-        }
+        if self.ball_direction_x == false {
+            if self.ball_y > self.left_player + PLAYER_HEIGHT - 1 && self.left_player < matrix::HEIGHT as u32 - PLAYER_HEIGHT {
+                self.left_player += 1;
+            }
 
-        if self.ball_y < self.left_player && self.left_player > 1 {
-            self.left_player -= 1;
+            if self.ball_y < self.left_player && self.left_player > 0 {
+                self.left_player -= 1;
+            }
         }
 
     }
 
     fn update_right_player(&mut self) {
 
-        if self.ball_y > self.right_player + PLAYER_HEIGHT - 1 && self.right_player < matrix::HEIGHT as u32 - PLAYER_HEIGHT {
-            self.right_player += 1;
-        }
+        if self.ball_direction_x == true {
+            if self.ball_y > self.right_player + PLAYER_HEIGHT - 1 && self.right_player < matrix::HEIGHT as u32 - PLAYER_HEIGHT {
+                self.right_player += 1;
+            }
 
-        if self.ball_y < self.right_player && self.right_player > 1 {
-            self.right_player -= 1;
+            if self.ball_y < self.right_player && self.right_player > 0 {
+                self.right_player -= 1;
+            }
         }
 
     }

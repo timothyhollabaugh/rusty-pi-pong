@@ -35,7 +35,7 @@ pub extern "C" fn main() {
     let mut matrix = matrix::Matrix::new(1000);
     matrix.init();
 
-    matrix.set(0, 0, true);
+    //matrix.set(0, 0, true);
 
     /*
        matrix.set(0, 0, true);
