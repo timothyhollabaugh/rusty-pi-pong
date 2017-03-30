@@ -55,7 +55,7 @@ pub extern "C" fn main() {
        matrix.set(6, 2, true);
        */
 
-    let mut pong = pong::Pong::new(250000);
+    let mut pong = pong::Pong::new(250000, 250000);
 
     loop {
         let now = systimer::timer_lower_bits();

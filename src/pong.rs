@@ -6,6 +6,9 @@ use matrix;
 
 const PLAYER_HEIGHT: u32 = 2;
 
+const SPEED_INCREASE: u32 = 1000;
+const MIN_SPEED: u32 = 1000;
+
 pub struct Pong {
     ball_x: u32,
     ball_y: u32,
@@ -23,12 +26,15 @@ pub struct Pong {
     left_player: u32,
     right_player: u32,
 
-    last_update: u32,
-    delay: u32
+    ball_last_update: u32,
+    ball_delay: u32,
+
+    players_last_update: u32,
+    players_delay: u32
 }
 
 impl Pong {
-    pub fn new(delay: u32) -> Pong {
+    pub fn new(ball_delay: u32, players_delay: u32) -> Pong {
         Pong {
             ball_x: (matrix::WIDTH as u32)/2,
             ball_y: (matrix::HEIGHT as u32)/2,
@@ -42,33 +48,42 @@ impl Pong {
             left_player: (matrix::HEIGHT as u32)/2,
             right_player: (matrix::HEIGHT as u32)/2,
 
-            last_update: 0,
-            delay: delay
+            ball_last_update: 0,
+            ball_delay: ball_delay,
+
+            players_last_update: 0,
+            players_delay: players_delay
         }
     }
 
     pub fn update(&mut self, matrix: &mut matrix::Matrix, now: u32){
-        if now - self.last_update > self.delay {
+        if now - self.ball_last_update > self.ball_delay {
 
             matrix.set(self.ball_x as usize, self.ball_y as usize, false);
+
+            self.update_ball();
+
+            matrix.set(self.ball_x as usize, self.ball_y as usize, true);
+
+            self.ball_last_update = now;
+        }
+
+        if now - self.players_last_update > self.players_delay {
 
             for i in 0..PLAYER_HEIGHT {
                 matrix.set(0, (self.left_player + i) as usize, false);
                 matrix.set(matrix::WIDTH - 1, (self.right_player + i) as usize, false);
             }
 
-            self.update_ball();
             self.update_left_player();
             self.update_right_player();
-
-            matrix.set(self.ball_x as usize, self.ball_y as usize, true);
 
             for i in 0..PLAYER_HEIGHT {
                 matrix.set(0, (self.left_player + i) as usize, true);
                 matrix.set(matrix::WIDTH - 1, (self.right_player + i) as usize, true);
             }
 
-            self.last_update = now;
+            self.players_last_update = now;
         }
     }
 
