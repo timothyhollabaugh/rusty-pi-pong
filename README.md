@@ -1,5 +1,5 @@
 # rusty-pi-pong
-Pong using bare metal rust on a Raspberry Pi and a 5x7 LED matrix
+Pong using bare metal [Rust](https://www.rust-lang.org/en-US/) on a Raspberry Pi and a 5x7 LED matrix
 
 Uses [https://github.com/chickenchuck040/rusty-metal-raspberry-pi](https://github.com/chickenchuck040/rusty-metal-raspberry-pi) for the hardware access
 
